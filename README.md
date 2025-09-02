@@ -30,7 +30,7 @@ A RESTful API for Todo List management built with Flask, SQLAlchemy, and Marshma
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/xdendix/todolist-backend-flask.git
    cd todolist-backend-flask
    ```
 
