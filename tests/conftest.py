@@ -4,7 +4,7 @@ from todo_app import create_app
 from todo_app.extensions import db
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def app():
     """Create and configure a test app instance."""
     os.environ["SECRET_KEY"] = "test-secret-key"
@@ -22,7 +22,7 @@ def app():
         db.drop_all()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def client(app):
     """A test client for the app."""
     return app.test_client()

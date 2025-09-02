@@ -84,7 +84,7 @@ def get_todo(todo_id: int):
     """
     Mendapatkan todo berdasarkan ID.
     """
-    todo = Todo.query.get_or_404(todo_id)
+    todo = db.get_or_404(Todo, todo_id)
     result = todo_schema.dump(todo)
     return jsonify(result), 200
 
@@ -95,7 +95,7 @@ def update_todo(todo_id: int):
     """
     Memperbarui todo berdasarkan ID dengan data JSON yang dikirim.
     """
-    todo = Todo.query.get_or_404(todo_id)
+    todo = db.get_or_404(Todo, todo_id)
     json_data = request.get_json() or {}
 
     # Check if at least one field is provided for update
@@ -117,7 +117,7 @@ def delete_todo(todo_id: int):
     """
     Menghapus todo berdasarkan ID.
     """
-    todo = Todo.query.get_or_404(todo_id)
+    todo = db.get_or_404(Todo, todo_id)
     db.session.delete(todo)
     db.session.commit()
     return "", 204

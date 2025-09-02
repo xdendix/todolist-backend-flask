@@ -1,6 +1,10 @@
-# TodoList Backend Flask
+# 📋 TodoList Backend Flask
 
-A RESTful API for Todo List management built with Flask, SQLAlchemy, and Marshmallow.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Flask 3.0+](https://img.shields.io/badge/flask-3.0+-red.svg)](https://flask.palletsprojects.com/)
+
+A robust RESTful API for Todo List management built with Flask, SQLAlchemy, and Marshmallow. Features comprehensive CRUD operations, advanced search and filtering, secure environment management, and extensive testing coverage.
 
 ## Features
 
@@ -17,7 +21,9 @@ A RESTful API for Todo List management built with Flask, SQLAlchemy, and Marshma
 - **Database**: SQLAlchemy with SQLite
 - **Serialization**: Marshmallow & Marshmallow-SQLAlchemy
 - **CORS**: Flask-CORS for cross-origin requests
+- **Rate Limiting**: Flask-Limiter for API rate limiting
 - **Environment**: python-dotenv for configuration
+- **Testing**: pytest with Flask-Testing
 
 ## Quick Start
 
@@ -78,7 +84,8 @@ The API will be available at: `http://127.0.0.1:5000`
 - **GET** `/health` - Check API status
 
 ### Todo Management
-- **GET** `/api/todos/` - Get all todos
+- **GET** `/api/todos/` - Get all todos (with pagination)
+  - Query parameters: `page` (default: 1), `per_page` (default: 10, max: 100)
 - **POST** `/api/todos/` - Create new todo
 - **GET** `/api/todos/<id>` - Get todo by ID
 - **PUT** `/api/todos/<id>` - Update todo
@@ -86,7 +93,7 @@ The API will be available at: `http://127.0.0.1:5000`
 
 ### Search & Filter
 - **GET** `/api/todos/search` - Search todos with filters
-  - Query parameters: `q`, `prioritas`, `status`, `deadline`
+  - Query parameters: `q` (keyword), `prioritas`, `status`, `deadline`, `deadline_from`, `deadline_to`, `page`, `per_page`
 
 ## Request/Response Examples
 
@@ -105,7 +112,7 @@ Content-Type: application/json
 
 ### Search Todos
 ```bash
-GET /api/todos/search?q=flask&prioritas=High
+GET /api/todos/search?q=flask&prioritas=High&status=belum%20selesai&deadline_from=2025-01-01&deadline_to=2025-12-31
 ```
 
 ## Data Models
@@ -136,6 +143,30 @@ GET /api/todos/search?q=flask&prioritas=High
 
 3. **Start Testing**
    - Run requests in order or as needed
+
+## Running Tests
+
+The project includes comprehensive unit and integration tests using pytest.
+
+### Run All Tests
+```bash
+python run_tests.py
+```
+
+### Run Specific Test
+```bash
+python run_tests.py test_create_todo_success
+```
+
+### Run Tests with Coverage
+```bash
+pytest --cov=todo_app --cov-report=html
+```
+
+### Test Structure
+- **Unit Tests**: Test individual functions and methods
+- **Integration Tests**: Test API endpoints and database interactions
+- **Fixtures**: Pre-configured test data and app instances
 
 ## Project Structure
 

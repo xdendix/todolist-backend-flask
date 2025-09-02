@@ -1,33 +1,7 @@
 import pytest
-import pytest
 import json
 from datetime import datetime, date
-from todo_app import create_app
-from todo_app.extensions import db
 from todo_app.models import Todo
-
-
-@pytest.fixture
-def app():
-    """Create and configure a test app instance."""
-    app = create_app()
-    app.config.update({
-        "TESTING": True,
-        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
-        "SECRET_KEY": "test-secret-key",
-    })
-
-    with app.app_context():
-        db.create_all()
-        yield app
-        db.session.remove()
-        db.drop_all()
-
-
-@pytest.fixture
-def client(app):
-    """A test client for the app."""
-    return app.test_client()
 
 
 @pytest.fixture
