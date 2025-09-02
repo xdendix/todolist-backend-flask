@@ -45,7 +45,27 @@ A RESTful API for Todo List management built with Flask, SQLAlchemy, and Marshma
    pip install -r requirements.txt
    ```
 
-4. **Run the application**
+4. **Configure environment variables securely**
+
+   - Copy the example environment file:
+     ```bash
+     cp instance/.env.example instance/.env
+     ```
+
+   - Generate a secure SECRET_KEY:
+     ```bash
+     python -c "import secrets; print(secrets.token_hex(32))"
+     ```
+
+   - Edit `instance/.env` and replace the SECRET_KEY value with the generated key.
+
+   - **Important Security Notes:**
+     - Never commit your `.env` file to version control.
+     - The `.env` file is included in `.gitignore` to prevent accidental commits.
+     - Keep your SECRET_KEY and other sensitive data private.
+     - Use different keys for development and production environments.
+
+5. **Run the application**
    ```bash
    python app.py
    ```
@@ -129,6 +149,8 @@ todolist-backend-flask/
 ├── TodoList_API_Postman_Collection.json  # Postman collection
 ├── Postman_Import_Instructions.md       # Import guide
 ├── instance/                  # Instance-specific config
+│   ├── .env.example          # Example environment variables file (do not commit)
+│   └── .env                  # Local environment variables file (ignored by git)
 ├── todo_app/                  # Main application package
 │   ├── __init__.py           # Flask app factory
 │   ├── extensions.py         # Flask extensions
@@ -180,6 +202,11 @@ PORT=5000
 - ✅ **.env file**: Sudah di-ignore oleh .gitignore
 - ✅ **Production**: Gunakan key yang berbeda dari development
 - ✅ **Version Control**: Jangan commit file .env
+- ✅ **File Permissions**: Set restrictive permissions on .env file (chmod 600)
+- ✅ **Regular Rotation**: Rotate SECRET_KEY periodically
+- ✅ **Environment Separation**: Use different .env files for dev/staging/production
+- ✅ **Logging**: Never log sensitive environment variables
+- ✅ **Backup**: Don't include .env in backups or snapshots
 
 ## Development
 
@@ -200,6 +227,23 @@ PORT=5000
 - JSON request/response
 - Proper HTTP status codes
 - Detailed error messages
+
+## Production Deployment
+
+### Environment Setup
+- Use production-grade database (PostgreSQL, MySQL) instead of SQLite
+- Set `FLASK_DEBUG=0` in production
+- Use environment-specific configuration files
+- Implement proper logging and monitoring
+- Set up SSL/TLS certificates
+- Configure CORS properly for your frontend domain
+
+### Security Considerations
+- Use a web server like Gunicorn or uWSGI
+- Implement rate limiting
+- Set up proper firewall rules
+- Regular security updates
+- Monitor for vulnerabilities
 
 ## Contributing
 
