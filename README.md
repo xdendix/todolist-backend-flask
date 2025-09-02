@@ -179,22 +179,6 @@ todolist-backend-flask/
 
 3. **Update file `.env` dengan key yang di-generate**
 
-### File Environment Variables
-
-File `.env` di folder `instance/` berisi:
-
-```env
-# KEAMANAN - WAJIB diisi dengan key yang aman
-SECRET_KEY=be1b4d4345d37fa106b537dc5788acaaaf74f1bd7cde277ff8a6b31ce7cc168a
-
-# DATABASE
-DATABASE_URL=sqlite:///data.db
-
-# APLIKASI
-FLASK_DEBUG=1
-PORT=5000
-```
-
 ### 🔒 Security Best Practices
 
 - ✅ **SECRET_KEY**: Gunakan key random minimal 32 karakter
