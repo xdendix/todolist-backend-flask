@@ -2,27 +2,28 @@ from flask import Flask
 from .extensions import db
 from .todos.routes import bp as todos_bp
 import os
+import logging
 from typing import Optional
 
 
 def create_app(config_object: Optional[str] = None) -> Flask:
     """
-    Factory function untuk membuat instance Flask app.
-    Bisa menerima nama config class atau memakai default.
+    Factory function to create Flask app instance.
+    Can accept config class name or use default.
     """
 
     app = Flask(__name__, instance_relative_config=True)
 
-    # Validasi dan konfigurasi SECRET_KEY (WAJIB untuk keamanan)
+    # Validate and configure SECRET_KEY (required for security)
     secret_key = os.environ.get("SECRET_KEY")
     if not secret_key:
         raise ValueError(
-            "SECRET_KEY tidak ditemukan! "
-            "Silakan set environment variable SECRET_KEY atau buat file .env di folder instance/. "
-            "Lihat instance/.env.example untuk contoh konfigurasi."
+            "SECRET_KEY not found! "
+            "Please set environment variable SECRET_KEY or create .env file in instance/ folder. "
+            "See instance/.env.example for example configuration."
         )
 
-    # Konfigurasi dasar aplikasi
+    # Basic app configuration
     app.config.from_mapping(
         SECRET_KEY=secret_key,
         SQLALCHEMY_DATABASE_URI=os.environ.get("DATABASE_URL", "sqlite:///data.db"),
@@ -30,26 +31,30 @@ def create_app(config_object: Optional[str] = None) -> Flask:
         DEBUG=os.environ.get("FLASK_DEBUG", "1") == "1",
     )
 
-    # Inisialisasi ekstensi database
+    # Setup logging
+    logging.basicConfig(level=logging.DEBUG if app.config["DEBUG"] else logging.INFO)
+    app.logger.setLevel(logging.DEBUG if app.config["DEBUG"] else logging.INFO)
+
+    # Initialize database extension
     try:
         db.init_app(app)
     except Exception as e:
-        app.logger.error(f"Error saat inisialisasi database: {e}")
+        app.logger.error(f"Error initializing database: {e}")
         raise
 
-    # Registrasi blueprint todos
+    # Register todos blueprint
     app.register_blueprint(todos_bp, url_prefix="/api/todos")
 
-    # Endpoint health check
+    # Health check endpoint
     @app.route("/health")
     def health():
         """
-        Endpoint untuk pengecekan status aplikasi.
+        Endpoint to check app status.
         """
         return {"status": "ok"}
 
-    # Buat tabel otomatis saat pertama kali (hanya untuk development,
-    # sebaiknya menggunakan migrasi database di production)
+    # Auto create tables on first run (only for development,
+    # use migrations in production)
     with app.app_context():
         db.create_all()
 
