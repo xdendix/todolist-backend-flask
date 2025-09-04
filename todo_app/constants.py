@@ -15,10 +15,25 @@ DEFAULT_PAGE = 1
 DEFAULT_PER_PAGE = 10
 MAX_PER_PAGE = 100
 
+# HTTP Status Codes
+HTTP_STATUS = {
+    "OK": 200,
+    "CREATED": 201,
+    "NO_CONTENT": 204,
+    "BAD_REQUEST": 400,
+    "UNAUTHORIZED": 401,
+    "FORBIDDEN": 403,
+    "NOT_FOUND": 404,
+    "METHOD_NOT_ALLOWED": 405,
+    "CONFLICT": 409,
+    "UNPROCESSABLE_ENTITY": 422,
+    "INTERNAL_SERVER_ERROR": 500,
+}
+
 # Error messages
 ERROR_MESSAGES = {
     "no_input": "No input provided.",
-    "duplicate_title": "Title already exists, please use a different title.",
+    "duplicate_title": "Judul sudah ada, silakan gunakan judul yang berbeda.",
     "no_data_for_update": "No data provided for update.",
     "invalid_priority": "Priority must be High, Medium, or Low.",
     "invalid_deadline": "Invalid deadline format (use YYYY-MM-DD).",
@@ -27,6 +42,11 @@ ERROR_MESSAGES = {
     "invalid_page": "Invalid page number.",
     "invalid_per_page": "Invalid per_page value.",
     "invalid_date": "Invalid date format.",
+    "validation_error": "Validation failed.",
+    "database_error": "Database operation failed.",
+    "internal_error": "Internal server error.",
+    "invalid_content_type": "Invalid content type. Expected application/json.",
+    "invalid_json": "Invalid JSON format.",
 }
 
 # Success messages
