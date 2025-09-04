@@ -1,6 +1,11 @@
 from flask import Flask
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask_cors import CORS
 from .extensions import db
 from .todos.routes import bp as todos_bp
+from .config import get_config
+from .api_docs import api
 import os
 import logging
 from typing import Optional
@@ -14,26 +19,50 @@ def create_app(config_object: Optional[str] = None) -> Flask:
 
     app = Flask(__name__, instance_relative_config=True)
 
-    # Validate and configure SECRET_KEY (required for security)
-    secret_key = os.environ.get("SECRET_KEY")
-    if not secret_key:
-        raise ValueError(
-            "SECRET_KEY not found! "
-            "Please set environment variable SECRET_KEY or create .env file in instance/ folder. "
-            "See instance/.env.example for example configuration."
+    # Load configuration
+    if config_object:
+        config_class = get_config(config_object)
+    else:
+        config_class = get_config()
+
+    app.config.from_object(config_class)
+
+    # Initialize rate limiter
+    default_limits = app.config.get("RATELIMIT_DEFAULT")
+    if default_limits is None:
+        limiter = Limiter(
+            app=app,
+            key_func=get_remote_address,
+            storage_uri=app.config.get("RATELIMIT_STORAGE_URL", "memory://")
+        )
+    else:
+        limiter = Limiter(
+            app=app,
+            key_func=get_remote_address,
+            default_limits=[default_limits] if isinstance(default_limits, str) else default_limits,
+            storage_uri=app.config.get("RATELIMIT_STORAGE_URL", "memory://")
         )
 
-    # Basic app configuration
-    app.config.from_mapping(
-        SECRET_KEY=secret_key,
-        SQLALCHEMY_DATABASE_URI=os.environ.get("DATABASE_URL", "sqlite:///data.db"),
-        SQLALCHEMY_TRACK_MODIFICATIONS=False,
-        DEBUG=os.environ.get("FLASK_DEBUG", "1") == "1",
-    )
+    # Initialize CORS
+    cors_origins = app.config.get("CORS_ORIGINS")
+    if cors_origins is None:
+        cors_origins = ["*"]
+    CORS(app, origins=cors_origins)
 
     # Setup logging
-    logging.basicConfig(level=logging.DEBUG if app.config["DEBUG"] else logging.INFO)
-    app.logger.setLevel(logging.DEBUG if app.config["DEBUG"] else logging.INFO)
+    log_level = app.config.get("LOG_LEVEL", "INFO")
+    if not isinstance(log_level, int):
+        log_level = getattr(logging, log_level.upper(), logging.INFO)
+
+    log_format = app.config.get("LOG_FORMAT")
+    if log_format is None:
+        log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+    logging.basicConfig(
+        level=log_level,
+        format=log_format
+    )
+    app.logger.setLevel(log_level)
 
     # Initialize database extension
     try:
@@ -44,6 +73,9 @@ def create_app(config_object: Optional[str] = None) -> Flask:
 
     # Register todos blueprint
     app.register_blueprint(todos_bp, url_prefix="/api/todos")
+
+    # Initialize API documentation
+    api.init_app(app)
 
     # Health check endpoint
     @app.route("/health")

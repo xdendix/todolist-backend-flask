@@ -85,9 +85,10 @@ class TestTodoRoutes:
         response = client.post("/api/todos/", content_type="application/json")
         assert response.status_code == 400
 
-        # When no data is sent, Flask returns HTML error page, not JSON
-        response_text = response.data.decode('utf-8')
-        assert "Bad Request" in response_text or "Failed to decode JSON" in response_text
+        # Our middleware converts the error to JSON response
+        data = json.loads(response.data)
+        assert data["success"] is False
+        assert "Invalid JSON format" in data["message"] or "No input provided" in data["message"]
 
     def test_get_todo_by_id(self, client, sample_todo_data):
         """Test getting a todo by ID."""

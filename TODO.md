@@ -1,37 +1,36 @@
-# TODO: Improve Code Quality and Maintainability for Todo App
+# Todo API Improvements Plan
 
-## Approved Plan Breakdown
+## Overview
+This plan outlines improvements to make the Todo RESTful API follow best practices for code quality, maintainability, and RESTful design.
 
-1. **Create `todo_app/constants.py`**:
-   - Define constants for error messages, success messages, priority values, status values, and pagination limits.
+## Completed Tasks
+- [x] Initial code review and analysis
+- [x] Create TODO.md with improvement plan
+- [x] Centralized error handling with custom error handlers and consistent response format
+- [x] Service layer implementation for business logic separation
+- [x] Request validation middleware with logging and input sanitization
+- [x] Environment-based configuration management
+- [x] Rate limiting using Flask-Limiter, security headers, and CORS support
+- [x] Enhanced logging with request context and structured logs
 
-2. **Edit `todo_app/models.py`**:
-   - Add English comments to fields and methods.
-   - Add type hints to methods.
+## Pending Tasks
 
-3. **Edit `todo_app/schemas.py`**:
-   - Translate comments to English.
-   - Use constants from `constants.py` for validation.
-   - Improve type hints.
+### 7. API Documentation
+- [x] Add Flask-RESTX for OpenAPI documentation
+- [x] Document all endpoints with proper schemas
+- [ ] Add API versioning support
 
-4. **Edit `todo_app/todos/routes.py`**:
-   - Translate comments and docstrings to English.
-   - Extract helper functions for pagination.
-   - Add logging, standardize error responses, improve type hints.
-   - Optimize search query and add input validation.
+### 8. Response Improvements
+- [ ] Add pagination metadata in response headers
+- [ ] Implement HATEOAS links in responses
+- [ ] Add content negotiation support
 
-5. **Edit `todo_app/__init__.py`**:
-   - Add logging configuration.
+### 9. Code Quality Improvements
+- [ ] Rename fields for consistency (judul -> title, etc.)
+- [ ] Add type hints throughout the codebase
+- [ ] Implement async support for route handlers
 
-6. **Followup Steps**:
-   - Run unit tests.
-   - Test API endpoints manually.
-   - Review for security and performance.
-
-## Progress
-- [x] Step 1: Create constants.py
-- [x] Step 2: Edit models.py
-- [x] Step 3: Edit schemas.py
-- [x] Step 4: Edit routes.py
-- [x] Step 5: Edit __init__.py
-- [ ] Step 6: Run tests and manual testing
+### 10. Testing Enhancements
+- [ ] Review and improve existing unit tests
+- [ ] Add integration tests for API endpoints
+- [ ] Add test coverage reporting
